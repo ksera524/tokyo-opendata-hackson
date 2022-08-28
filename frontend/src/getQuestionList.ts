@@ -46,9 +46,9 @@ export default function getQuestionList(questions: string[]) {
 
     const japanese: IQuestionsJa = {
         preschooler: '未就学児',
-        junour12: '小学1〜2年生',
-        junour34: '小学3〜4年生',
-        junour56: '小学5〜6年生',
+        junour12: '小学1～2年生',
+        junour34: '小学3～4年生',
+        junour56: '小学5～6年生',
         middle1: '中学1年生',
         middle2: '中学2年生',
         middle3: '中学3年生',
