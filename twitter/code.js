@@ -1,7 +1,27 @@
 function main() {
-  const searchQuery = makeSearchQuery();
+  const searchQuery = `${makeSearchQuery()} -filter:retweets -filter:replies`;
   console.log(searchQuery);
-  writeResult({'a': 'a', 'b': 'b', 'c': 'c', 'd': 'd'})
+  console.log(getReplyComment());
+  const searchResults = searchTweet(searchQuery);
+  writeResult(searchResults);
+}
+
+function searchTweet(queryStr) {
+  var twitterService = getService();
+  if (!twitterService.hasAccess()) {
+    console.log(twitterService.getLastError());
+    return;
+  }
+  const query = `q=${encodeURIComponent(queryStr)}&count=100&result_type=recent`;
+  const json = twitterService.fetch(`https://api.twitter.com/1.1/search/tweets.json?${query}`, { method:"GET" });
+  const searchResultTweets = JSON.parse(json);
+  
+  const searchResults = {};
+  for (const tweet of searchResultTweets['statuses']) {
+    searchResults[tweet.id_str] = tweet.text;
+  }
+
+  return searchResults;
 }
 
 function writeResult(searchResults) {
@@ -16,11 +36,13 @@ function writeResult(searchResults) {
   }
 }
 
-// 検索結果ツイート用シートを白紙にしたい場合、この関数を実行
-function clearResult() {
+function getReplyComment() {
   const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = spreadSheet.getSheetByName('検索結果ツイート');
-  sheet.clear();
+  const sheet = spreadSheet.getSheetByName('返信内容');
+  const reply = sheet.getDataRange().getValues();
+  reply.shift();
+
+  return reply[0][0];
 }
 
 function makeSearchQuery() {
@@ -40,4 +62,17 @@ function makeSearchQuery() {
 function concatOrOperator(word) {
   const words = String(word).split(' ');
   return words.join(' OR ');
+}
+
+function getService() {
+  return OAuth1.createService('Twitter')
+      .setAccessTokenUrl('https://api.twitter.com/oauth/access_token')
+      .setRequestTokenUrl('https://api.twitter.com/oauth/request_token')
+      .setAuthorizationUrl('https://api.twitter.com/oauth/authorize')
+      // 設定した認証情報をセット
+      .setConsumerKey(PropertiesService.getScriptProperties().getProperty("CONSUMER_API_KEY"))
+      .setConsumerSecret(PropertiesService.getScriptProperties().getProperty("CONSUMER_API_SECRET"))
+      .setCallbackFunction('authCallback')
+      // 認証情報をプロパティストアにセット（これにより認証解除するまで再認証が不要になる）
+      .setPropertyStore(PropertiesService.getUserProperties());
 }
