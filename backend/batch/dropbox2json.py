@@ -1,3 +1,5 @@
+#このクソコードのことは忘れるのだ。。。
+
 import dropbox
 import json
 import csv

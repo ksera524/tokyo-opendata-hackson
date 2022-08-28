@@ -25,7 +25,7 @@ for q in questionnaire:
     rows = download_csv(q['url'])
     if q['label'] == 'q5':
         for index, column in enumerate(q['json-columns']):
-            childObj[column] = float(rows[1][3:][index])
+            childObj[column] = float(rows[1][2:][index])
     elif q['label'] == 'q7' or q['label'] == 'q14':
         for index, column in enumerate(q['json-columns']):
             childObj[column] =float(rows[1:][index][1])

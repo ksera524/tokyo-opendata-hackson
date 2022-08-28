@@ -2,10 +2,11 @@ use actix_web::{get,HttpResponse, HttpServer,App};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::{fs::File, io::BufReader};
-
 use std::process::{Command};
+
 const SERVER:&str = "0.0.0.0:8080";
 const JSON_NAME:&str = "output.json";
+const PYTHON_PATH:&str = "batch/qcsv2json.py";
 
 #[derive(Serialize, Deserialize)]
 struct ReturnJson{
@@ -29,8 +30,8 @@ async fn get_json() -> Result<HttpResponse,actix_web::Error>{
 
 #[get("/python")]
 async fn execute_python()-> Result<HttpResponse,actix_web::Error> {
-    let path:String = "batch/dropbox2json.py".to_string();
-    Command::new("python").args(&["-u".to_string(), path]).spawn().unwrap();
+    let path = PYTHON_PATH;
+    Command::new("python").args(&["-u".to_string(), path.to_string()]).spawn().unwrap();
     
 
     Ok(HttpResponse::Ok().body("ok"))

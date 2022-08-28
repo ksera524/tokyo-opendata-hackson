@@ -3,22 +3,25 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from "react-chartjs-2";
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import { InsertEmoticon } from '@mui/icons-material';
+import getQuestionList from '../../src/getQuestionList';
+import { useRouter } from 'next/router';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type GraphDataType = {
     q5:{
-        middle1: number;
-        junour56: number;
-        middle3: number;
+        preschooler: number;
+        junour12: number;
         junour34: number;
+        junour56: number;
+        middle1: number;
+        middle2: number;
+        middle3: number;
         high1: number;
         high2: number;
-        middle2: number;
         high3: number;
-        junour12: number;
     },
     q7:{
         a: number;
@@ -56,21 +59,22 @@ type GraphDataType = {
 
 export const getServerSideProps: GetServerSideProps = async () => {
     try {
-        const host = 'localhost:8080'
-        const products = await fetch(`http://localhost:8080/getJson`)
+        const host = 'http://34.82.211.141:8080/'
+        const products = await fetch(`http://34.82.211.141:8080/getJson`)
             .then(data => data.json())
         
         const GraphData: GraphDataType = {
             q5:{
-            middle1: products.q5.middle1,
-            junour56: products.q5.junour56,
-            middle3: products.q5.middle3,
-            junour34: products.q5.junour34,
-            high1: products.q5.high1,
-            high2: products.q5.high2,
-            middle2: products.q5.middle2,
-            high3: products.q5.high3,
-            junour12: products.q5.junour12
+                preschooler: products.q5.preschooler,
+                junour12: products.q5.junour12,
+                junour34: products.q5.junour34,
+                junour56: products.q5.junour56,
+                middle1: products.q5.middle1,
+                middle2: products.q5.middle2,
+                middle3: products.q5.middle3,
+                high1: products.q5.high1,
+                high2: products.q5.high2,
+                high3: products.q5.high3
             },
             q7:{
                 a: products.q7.a,
@@ -113,25 +117,42 @@ export const getServerSideProps: GetServerSideProps = async () => {
             props: []
         }
     }
-  }
+}
+
+function matchingData(word: any , keyData: string[], valueData: number[]) {
+    for(let i = 0; i < keyData.length; i++)  {
+        if (keyData[i].indexOf(word) > -1) {
+            return valueData[i];
+            break
+        }
+    }
+}
+
+
+
 
 const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
+    const router = useRouter();
     const keys = Object.keys(props.q5);
+    const values2 = Object.values(props.q5);
+    const keysJa = getQuestionList(keys);
+    const value2 = matchingData(router.query.value2,keysJa,values2);
     const graphData = {
-        labels: keys,
+        labels: keysJa,
         datasets: [
             {
                 label: "調査結果",
                 data: [
-                    props.q5.middle1, 
-                    props.q5.junour56, 
-                    props.q5.middle3, 
+                    props.q5.preschooler,
+                    props.q5.junour12,
                     props.q5.junour34, 
+                    props.q5.junour56,
+                    props.q5.middle1,
+                    props.q5.middle2,
+                    props.q5.middle3, 
                     props.q5.high1,
                     props.q5.high2, 
-                    props.q5.middle2, 
-                    props.q5.high3,
-                    props.q5.junour12,
+                    props.q5.high3
                 ],
                 backgroundColor: [
                     'rgb(255, 99, 132)',
@@ -142,7 +163,8 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
                     'rgb(54, 30, 235)',
                     'rgb(55, 25, 86)',
                     'rgb(20, 122, 125)',
-                    'rgb(135, 115, 192)',                
+                    'rgb(135, 115, 192)',
+                    'rgb(90, 90, 243)',                  
                 ],
                 borderColor: [
                     'rgb(255, 99, 132)',
@@ -153,15 +175,19 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
                     'rgb(54, 30, 235)',
                     'rgb(55, 25, 86)',
                     'rgb(20, 122, 125)',
-                    'rgb(135, 115, 192)',  
+                    'rgb(135, 115, 192)',
+                    'rgb(90, 90, 243)',  
                   ],
                 borderWidth: 1,
             }
         ]
     }
     const keys2 = Object.keys(props.q7);
+    const keysJa2 = getQuestionList(keys2);
+    const values1 = Object.values(props.q7);
+    const value1 = matchingData(router.query.value1,keysJa2,values1);
     const graphData2 ={
-        labels: keys2,
+        labels: keysJa2,
         datasets: [
             {
                 label: "調査結果2",
@@ -219,8 +245,11 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
     }
 
     const keys3 = Object.keys(props.q14);
+    const keysJa3 = getQuestionList(keys3);
+    const values3 = Object.values(props.q14);
+    const value3 = matchingData(router.query.value3,keysJa3,values3);
     const graphData3 ={
-        labels: keys3,
+        labels: keysJa3,
         datasets: [
             {
                 label: "調査結果2",
@@ -273,10 +302,17 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
             }
         ]
     }
+
     const options = {
         maintainAspectRatio: false,
-        responsive: false
-      };
+    };
+
+    const clickButton = () => {
+        router.push({
+            pathname:"/",   //URL
+          });
+    }
+
     return (
       <Grid container alignItems='center' justifyContent='center' spacing={2}>
         <Grid item xs={12}>
@@ -284,14 +320,32 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
             質問のアンケート結果 
             </Typography>
         </Grid>
-        <Grid item xs={4} textAlign='center'>
-            <Pie data={graphData} /> 
+        <Grid item xs={4} textAlign='center' mb={3} style= {{height: "20%"}}>
+            <h1>{router.query.value2}という理由でスマホを持たせた親は{value2}%です。</h1> 
         </Grid>
-        <Grid item xs={4} textAlign='center'>
-            <Pie data={graphData2} /> 
+        <Grid item xs={8} textAlign='center' mb={3} style= {{height: "20%"}}>
+            <Pie data={graphData} 
+                 options={options}
+                 width={400}
+                 height={400} /> 
         </Grid>
-        <Grid item xs={4} textAlign='center'>
-            <Pie data={graphData3} /> 
+        <Grid item xs={4} textAlign='center' mb={3} style= {{height: "20%"}}>
+            <h1>{router.query.value1}という理由でスマホを持たせた親は{value1}%です。</h1>  
+        </Grid>
+        <Grid item xs={8} textAlign='center' mb={3} style= {{height: "20%"}}>
+            <Pie data={graphData2} 
+                 options={options}
+                 width={400}
+                 height={400} /> 
+        </Grid>
+        <Grid item xs={4} textAlign='center' mb={3} style= {{height: "20%"}}>
+        <h1>{router.query.value3}という理由でスマホを持たせた親は{value3}%です。</h1> 
+        </Grid>
+        <Grid item xs={8} textAlign='center' mb={3} style= {{height: "20%"}}>
+            <Pie data={graphData3} 
+                 options={options}
+                 width={400}
+                 height={400} /> 
         </Grid>
         <Typography variant="h5" gutterBottom mt={3}>
             スマホの悩みについてご相談したい方は
@@ -300,6 +354,11 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
             </a>
             へ
         </Typography>
+        <Grid item xs={12} textAlign='center'>
+            <Button onClick={clickButton} variant="contained" size="large">
+                戻る
+            </Button>
+        </Grid>
       </Grid>
     )
 }
