@@ -59,8 +59,8 @@ type GraphDataType = {
 
 export const getServerSideProps: GetServerSideProps = async () => {
     try {
-        const host = 'localhost:8080'
-        const products = await fetch(`http://localhost:8080/getJson`)
+        const host = 'http://34.82.211.141:8080/'
+        const products = await fetch(`http://34.82.211.141:8080/getJson`)
             .then(data => data.json())
         
         const GraphData: GraphDataType = {
