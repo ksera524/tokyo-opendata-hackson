@@ -5,12 +5,22 @@ function main() {
   const searchResults = searchTweet(searchQuery);
   const restoredTweet = getRestoredTweet();
   const idStrList = Object.keys(restoredTweet);
-  console.log(searchResults);
   for (const idStr of idStrList) {
-    console.log(idStr);
     delete searchResults[idStr];
   }
-  console.log(searchResults);
+
+  const targetIdStrList = Object.keys(searchResults);
+  if (targetIdStrList?.length < 1) {
+    console.log('No target found.');
+    return;
+  }
+  /* for (const idStr of targetIdStrList) {
+    const result = replyToTweet(idStrList);
+    if (!result) {
+      console.log('Failed to reply.')
+      delete searchResults[idStr];
+    }
+  } */
 
   console.log("Restore search result to spread sheet.");
   writeResult(searchResults);
@@ -32,6 +42,23 @@ function searchTweet(queryStr) {
   }
 
   return searchResults;
+}
+
+function replyToTweet(idStr) {
+  var twitterService = getService();
+  if (!twitterService.hasAccess()) {
+    console.log(twitterService.getLastError());
+    return;
+  }
+  const json = twitterService.fetch('https://api.twitter.com/1.1/statuses/update.json', {
+    method:"POST",
+    payload: {
+      status: getReplyComment(),
+      in_reply_to_status_id : idStr
+    }
+  });
+  
+  return JSON.parse(json).id_str;
 }
 
 function getRestoredTweet() {
