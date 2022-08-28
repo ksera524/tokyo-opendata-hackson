@@ -1,8 +1,18 @@
 function main() {
+  console.log("Make search query.");
   const searchQuery = `${makeSearchQuery()} -filter:retweets -filter:replies`;
-  console.log(searchQuery);
-  console.log(getReplyComment());
+  console.log("Search Tweet.");
   const searchResults = searchTweet(searchQuery);
+  const restoredTweet = getRestoredTweet();
+  const idStrList = Object.keys(restoredTweet);
+  console.log(searchResults);
+  for (const idStr of idStrList) {
+    console.log(idStr);
+    delete searchResults[idStr];
+  }
+  console.log(searchResults);
+
+  console.log("Restore search result to spread sheet.");
   writeResult(searchResults);
 }
 
@@ -22,6 +32,19 @@ function searchTweet(queryStr) {
   }
 
   return searchResults;
+}
+
+function getRestoredTweet() {
+  const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = spreadSheet.getSheetByName('検索結果ツイート');
+  const tweets = sheet.getDataRange().getValues();
+
+  const restoredTweet = {};
+  for (const tweet of tweets) {
+    restoredTweet[tweet[0]] = tweet[1];
+  }
+
+  return restoredTweet;
 }
 
 function writeResult(searchResults) {
