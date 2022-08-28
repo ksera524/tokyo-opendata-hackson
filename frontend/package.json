@@ -2,9 +2,8 @@
   "name": "tokyo-opendata-hackson",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
