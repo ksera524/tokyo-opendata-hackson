@@ -24,7 +24,6 @@ const Header: NextPage = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="secondary">
         <Toolbar css={styles.toolBar}>
-          <SymbolFlagIcon css={styles.symbolFlag}></SymbolFlagIcon>
           <Typography
             variant="h6"
             component="div"

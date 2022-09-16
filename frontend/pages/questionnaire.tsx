@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'next/router';
 import { css } from "@emotion/react";
 import { useState } from "react";
+import { NextPage } from "next";
 
 const styles = {
   content: css({
@@ -56,12 +57,12 @@ const styles = {
   }),
 };
 
-export default function Questionnaire() {
+const questionnaire: NextPage = () => {
   const router = useRouter();
   const [step, setStep] = useState(0);
-  const [value1, setValue1] = useState("子供にせがまれた");
+  const [value1, setValue1] = useState("子供にせがまれたため");
   const [value2, setValue2] = useState("未就学児");
-  const [value3, setValue3] = useState("友達等とトラブル");
+  const [value3, setValue3] = useState("アプリで友達等とトラブル");
   const stepLabels = ["質問１", "質問２", "質問３"];
   const question1 = {
     questionLabel: "お子さんに携帯電話を持たせようと思った理由は何ですか?",
@@ -129,9 +130,8 @@ export default function Questionnaire() {
               <FormLabel>{question1.questionLabel}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={question1.valueLabels[0]}
+                defaultValue={value1}
                 name="radio-buttons-group"
-                value={value1}
                 css={styles.radioGroup}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setStep(1);
@@ -152,9 +152,8 @@ export default function Questionnaire() {
               <FormLabel>{question2.questionLabel}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={question2.valueLabels[0]}
+                defaultValue={value2}
                 name="radio-buttons-group"
-                value={value2}
                 css={styles.radioGroup}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setStep(2);
@@ -175,9 +174,8 @@ export default function Questionnaire() {
               <FormLabel>{question3.questionLabel}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={question3.valueLabels[0]}
+                defaultValue={value3}
                 name="radio-buttons-group"
-                value={value3}
                 css={styles.radioGroup}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setStep(3);
@@ -203,3 +201,6 @@ export default function Questionnaire() {
     </div>
   );
 }
+
+
+export default questionnaire;
