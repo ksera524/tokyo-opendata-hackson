@@ -57,7 +57,7 @@ const styles = {
   }),
 };
 
-const questionnaire: NextPage = () => {
+const Questionnaire:NextPage = () => {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [value1, setValue1] = useState("子供にせがまれたため");
@@ -102,7 +102,7 @@ const questionnaire: NextPage = () => {
   const clickButton = () => {
 
     router.push({
-        pathname:"/graph/graphPage",   //URL
+        pathname:"/graph/GraphPage",   //URL
         query: {step : step,
                 value1: value1,
                 value2: value2,
@@ -130,7 +130,7 @@ const questionnaire: NextPage = () => {
               <FormLabel>{question1.questionLabel}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={value1}
+                defaultValue={question1.valueLabels[0]}
                 name="radio-buttons-group"
                 css={styles.radioGroup}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,7 +152,7 @@ const questionnaire: NextPage = () => {
               <FormLabel>{question2.questionLabel}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={value2}
+                defaultValue={question2.valueLabels[0]}
                 name="radio-buttons-group"
                 css={styles.radioGroup}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,7 +171,7 @@ const questionnaire: NextPage = () => {
               </RadioGroup>
             </div>
             <div css={styles.question}>
-              <FormLabel>{question3.questionLabel}</FormLabel>
+              <FormLabel>{question3.valueLabels[0]}</FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue={value3}
@@ -203,4 +203,4 @@ const questionnaire: NextPage = () => {
 }
 
 
-export default questionnaire;
+export default Questionnaire;

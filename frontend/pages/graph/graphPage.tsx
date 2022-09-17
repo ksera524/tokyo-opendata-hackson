@@ -339,7 +339,7 @@ const GraphPage: NextPage<GraphDataType> = ( props: GraphDataType ) => {
                  height={400} /> 
         </Grid>
         <Grid item xs={4} textAlign='center' mb={3} style= {{height: "20%"}}>
-        <h1>{router.query.value3}という理由でスマホを持たせた親は{value3}%です。</h1> 
+        <h1>{router.query.value3}があった家庭は{value3}%です。</h1> 
         </Grid>
         <Grid item xs={8} textAlign='center' mb={3} style= {{height: "20%"}}>
             <Pie data={graphData3} 

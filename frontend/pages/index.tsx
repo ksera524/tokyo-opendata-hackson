@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   const router = useRouter();
   const clickButton = () => {
     router.push({
-        pathname:"/questionnaire",   //URL
+        pathname:"/Questionnaire",   //URL
       });
   }
 
