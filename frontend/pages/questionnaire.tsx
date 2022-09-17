@@ -102,7 +102,7 @@ const Questionnaire:NextPage = () => {
   const clickButton = () => {
 
     router.push({
-        pathname:"/graph/GraphPage",   //URL
+        pathname:"/graph/graphPage",   //URL
         query: {step : step,
                 value1: value1,
                 value2: value2,
